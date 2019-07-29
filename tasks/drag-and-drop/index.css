@@ -1,0 +1,10 @@
+body {
+    height: 100vh;
+    margin: 0;
+}
+
+.rectangular {
+    width: 300px;
+    height: 200px;
+    background-color: darkorange;
+}
