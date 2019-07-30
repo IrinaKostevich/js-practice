@@ -3,9 +3,9 @@ export function getPointerPosition(event) {
 }
 
 export function getOffset(element, [positionX, positionY]) {
-    const borders = element.getBoundingClientRect()
-    const offsetX = positionX - borders.left;
-    const offsetY = positionY - borders.top;
+    const boundingRect = element.getBoundingClientRect()
+    const offsetX = positionX - boundingRect.left;
+    const offsetY = positionY - boundingRect.top;
 
     return [offsetX, offsetY];
 }
