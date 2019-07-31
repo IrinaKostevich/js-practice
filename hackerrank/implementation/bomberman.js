@@ -3,6 +3,36 @@ function createArray(length, fn) {
     return Array.from(new Array(length), fn);
 }
 
+function getCellsToDestroy(bombsCoordinates) {
+    const cellsToDestroy = new Set();
+
+    for (const [row, column] of bombsCoordinates) {
+        cellsToDestroy.add(JSON.stringify([row, column]));
+
+        // Bottom
+        if (row + 1 < this.height) {
+            cellsToDestroy.add(JSON.stringify([row + 1, column]));
+
+        }
+        // Top
+        if (row - 1 >= 0) {
+            cellsToDestroy.add(JSON.stringify([row - 1, column]));
+
+        }
+        // Right
+        if (column + 1 < this.width) {
+            cellsToDestroy.add(JSON.stringify([row, column + 1]));
+        }
+        // Left
+        if (column - 1 >= 0) {
+            cellsToDestroy.add(JSON.stringify([row, column - 1]));
+
+        }
+    }
+
+    return cellsToDestroy;
+}
+
 class World {
     constructor(matrix) {
         this._matrix = matrix;
@@ -19,21 +49,13 @@ class World {
         return this._width;
     }
 
-    set width(value) {
-        this._width = value;
-    }
-
     get height() {
         return this._height;
     }
 
-    set height(value) {
-        this._height = value;
-    }
-
     *getCurrentBombs() {
-        for (let row = 0; row < this._matrix.length; row += 1) {
-            for (let column = 0; column < this._matrix[row].length; column += 1) {
+        for (let row = 0; row < this.height; row += 1) {
+            for (let column = 0; column < this.width; column += 1) {
                 if (this._matrix[row][column] === 'O') {
                     yield [row, column];
                 }
@@ -44,36 +66,6 @@ class World {
     fillWorldWithBombs() {
         const createRow = () => createArray(this.width, () => 'O');
         this._matrix = createArray(this.height, createRow);
-    }
-
-    getCellsToDestroy(bombsCoordinates) {
-        const cellsToDestroy = new Set();
-
-        for (const [row, column] of bombsCoordinates) {
-            cellsToDestroy.add(JSON.stringify([row, column]));
-
-            // Bottom
-            if (row + 1 < this.height) {
-                cellsToDestroy.add(JSON.stringify([row + 1, column]));
-
-            }
-            // Top
-            if (row - 1 >= 0) {
-                cellsToDestroy.add(JSON.stringify([row - 1, column]));
-
-            }
-            // Right
-            if (column + 1 < this.width) {
-                cellsToDestroy.add(JSON.stringify([row, column + 1]));
-            }
-            // Left
-            if (column - 1 >= 0) {
-                cellsToDestroy.add(JSON.stringify([row, column - 1]));
-
-            }
-        }
-
-        return cellsToDestroy;
     }
 
     detonate(cellsToDestroy) {
