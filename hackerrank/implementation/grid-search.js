@@ -1,15 +1,15 @@
 function findStartIndexes(string, subString) {
-    const indexes = [];
+    const indexes = Array.from(string)
+        .map((char, index) => {
+            if (char === subString[0]) {
+                const tempString = string.slice(index);
 
-    for (let i = 0; i < string.length; i += 1) {
-        if (subString[0] === string[i]) {
-            const tempString = string.slice(i);
-
-            if (tempString.startsWith(subString)) {
-                indexes.push(i);
+                if (tempString.startsWith(subString)) {
+                    return index;
+                }
             }
-        }
-    }
+        })
+        .filter(el => el != null);
 
     return indexes;
 }
@@ -45,12 +45,9 @@ function getSubGrid(grid, rowsRange, columnsRange) {
     const [startRow, endRow] = rowsRange;
     const [startColumn, endColumn] = columnsRange;
 
-    const subGrid = [];
-
-    for (let row = startRow; row <= endRow; row += 1) {
-        const tempRow = grid[row].slice(startColumn, endColumn + 1);
-        subGrid.push(tempRow);
-    }
+    const subGrid = grid
+        .slice(startRow, endRow + 1)
+        .map(row => row.slice(startColumn, endColumn + 1));
 
     return subGrid;
 }
@@ -80,20 +77,18 @@ function gridSearch(grid, pattern) {
     if (gridHeight < patternHeight) return 'NO';
     if (gridWidth < patternWidth) return 'NO';
 
-    const startPoints = findStartPoints(grid, pattern);
-    const verifiedPoints = startPoints.filter(startPoint => inRange(grid, pattern, startPoint));
+    for (const startPoint of findStartPoints(grid, pattern)) {
+        if (!inRange(grid, pattern, startPoint)) continue;
 
-    const subGridsDimentions = verifiedPoints.map((startPoint) => {
         const [startRow, startColumn] = startPoint;
         const [endRow, endColumn] = findEndPoint([patternWidth, patternHeight], startPoint);
-        return [[startRow, endRow], [startColumn, endColumn]];
-    });
 
-    const result = subGridsDimentions
-        .map(dimentions => getSubGrid(grid, ...dimentions))
-        .some(subGrid => compareGrids(subGrid, pattern));
+        const subGrid = getSubGrid(grid, [startRow, endRow], [startColumn, endColumn]);
 
-    return result ? 'YES' : 'NO';
+        if (compareGrids(subGrid, pattern)) return 'YES';
+    }
+
+    return 'NO';
 }
 
 // const grid = [
