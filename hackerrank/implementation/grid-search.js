@@ -1,37 +1,29 @@
-function findStartIndexes(string, subString) {
-    const indexes = Array.from(string)
-        .map((char, index) => {
-            if (char === subString[0]) {
-                const tempString = string.slice(index);
+function* findStartIndexes(string, subString) {
+    for (let index = 0; index < string.length; index += 1) {
+        if (string[index] === subString[0]) {
+            const tempString = string.slice(index);
 
-                if (tempString.startsWith(subString)) {
-                    return index;
-                }
+            if (tempString.startsWith(subString)) {
+                yield index;
             }
-        })
-        .filter(el => el != null);
-
-    return indexes;
+        }
+    }
 }
 
-function findStartPoints(grid, pattern) {
-    const firstPatternString = pattern[0];
+function* findStartPoints(grid, pattern) {
+    const patternString = pattern[0];
 
     const startRowsIndexes = grid
-        .map((row, index) => row.includes(firstPatternString) ? index : null)
+        .map((row, index) => row.includes(patternString) ? index : null)
         .filter(el => el != null);
 
     if (!startRowsIndexes) return null;
 
-    const startPoints = startRowsIndexes
-        .map((rowIndex) => {
-            const columnIndexes = findStartIndexes(grid[rowIndex], firstPatternString);
-            return columnIndexes.map(columnIndex => [rowIndex, columnIndex]);
-        })
-        .flat()
-        .filter(el => el != null);
-
-    return startPoints;
+    for (const rowIndex of startRowsIndexes) {
+        for (const columnIndex of findStartIndexes(grid[rowIndex], patternString)) {
+            yield [rowIndex, columnIndex];
+        }
+    }
 }
 
 function findEndPoint(patternSize, startPoint) {
