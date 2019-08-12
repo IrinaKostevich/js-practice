@@ -1,33 +1,33 @@
-type ArrayOfArrays = Array<Array<any>>;
-
-function parseArrayIntoChunks(array: any[], chunkSize: number): ArrayOfArrays {
+function splitArrayIntoChunks(array: any[], chunkSize: number): number[][] {
     const source: any[] = [...array.sort((a, b) => a - b)];
-    const chucnkedArray: ArrayOfArrays = [];
+    const chunkedArray: number[][] = [];
 
     while (source.length > 0) {
         // set first value to chunkedArray
-        if (chucnkedArray.length === 0) {
-            chucnkedArray.push([source.pop()]);
+        if (chunkedArray.length === 0) {
+            chunkedArray.push([source.pop()]);
             continue;
         }
 
-        if (chucnkedArray[chucnkedArray.length - 1].length < chunkSize) {
-            chucnkedArray[chucnkedArray.length - 1].push(source.pop());
+        if (chunkedArray[chunkedArray.length - 1].length < chunkSize) {
+            chunkedArray[chunkedArray.length - 1].push(source.pop());
         } else {
-            chucnkedArray.push([source.pop()]);
+            chunkedArray.push([source.pop()]);
         }
     }
 
-    return chucnkedArray;
+    return chunkedArray;
 }
 
-function getMinimumCost(buyers: number, priceList: number[]) {
-    const chunkedPriceList: ArrayOfArrays = parseArrayIntoChunks(priceList, buyers);
-    let totalSum: number = 0;
+function sum(values: number[]): number {
+    return values.reduce((acc, value) => acc + value, 0);
+}
 
-    for (let i = 0; i < chunkedPriceList.length; i += 1) {
-        totalSum += chunkedPriceList[i].reduce((acc, item) => acc + item, 0) * (i + 1);
-    }
+function getMinimumCost(buyers: number, priceList: number[]): number {
+    const chunkedPriceList: number[][] = splitArrayIntoChunks(priceList, buyers);
+
+    const chunkSums: number[] = chunkedPriceList.map((valuesArray, index) => sum(valuesArray) * (index + 1));
+    const totalSum: number = sum(chunkSums);
 
     return totalSum;
 }
