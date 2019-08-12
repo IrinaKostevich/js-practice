@@ -1,0 +1,24 @@
+{
+  "name": "js-practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "typescript": "3.5.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IrinaKostevich/js-practice.git"
+  },
+  "author": "Irina Kostevich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IrinaKostevich/js-practice/issues"
+  },
+  "homepage": "https://github.com/IrinaKostevich/js-practice#readme"
+}
